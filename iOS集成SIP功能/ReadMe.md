@@ -1,5 +1,9 @@
 # iOS集成SIP功能
 
+## doubango架构图
+
+![](doubango架构图.png)
+
 ## 下载doubango/idoubs代码
 
 ```
@@ -197,3 +201,6 @@ clang: error: linker command failed with exit code 1 (use -v to see invocation)
 - [idoubs DevelopersGuide学习笔记](http://blog.csdn.net/yuanbohx/article/details/8754574)
 - [idoubs安装与配置](http://wenku.baidu.com/view/0ede21711711cc7931b716d5.html)
 - [基于Doubango的iOS客户端开源框架](http://leopard168.blog.163.com/blog/static/16847184420139215540627/)
+- [doubango简介](http://www.cnblogs.com/fuland/p/3654834.html)
+- [idoubs 注册逻辑 学习笔记](http://blog.csdn.net/yuanbohx/article/details/8906142)
+- [idoubs/DevelopersGuide.md](https://github.com/DoubangoTelecom/idoubs/blob/master/DevelopersGuide.md)
