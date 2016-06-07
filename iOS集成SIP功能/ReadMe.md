@@ -193,6 +193,175 @@ ld: symbol(s) not found for architecture i386
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 ```
 
+## 构建demo应用
+
+### 创建SingleView的App
+
+常规默认创建，重点在保存路径，记得和`ios-ngn-stack`目录平行，即同一个父目录。
+
+### 将`ios-ngn-stack`添加为项目引用
+
+关闭XCode打开的其他项目，只保留当前的demo项目。
+将`ios-ngn-stack.xcodeproj`从finder中拖放到demo项目内。
+
+### 添加依赖
+
+在demo项目的Build Phases中，在`Target Dependencies`里添加各种需要的内容。
+
+- ios-ngn-stack
+- tinyBFCP
+- tinySAK
+- tinyNET
+- tinySDP
+- tinyRTP
+- tinyIPSec
+- tinyMSRP
+- tinyHTTP
+- tinyMEDIA
+- tinySIGCOMP
+- tinySMS
+- tinyXCAP
+- tinySIP
+- tinyDAV
+- tinyWRAP
+
+如果不关闭其他项目，很可能`ios-ngn-stack`项目也是打开状态，那么点击+号，下面就是空的。
+
+### 添加链接库
+
+在demo项目的Build Phases中，在`Link Binary With Libraries`里添加各种需要的内容。
+
+- libios_ngn_stack.a
+- libtinyBFCP.a
+- libtinySAK.a
+- libtinyNET.a
+- libtinySDP.a
+- libtinyRTP.a
+- libtinyIPSec.a
+- libtinyMSRP.a
+- libtinyHTTP.a
+- libtinyMEDIA.a
+- libtinySIGCOMP.a
+- libtinySMS.a
+- libtinyXCAP.a
+- libtinySIP.a
+- libtinyDAV.a
+- libtinyWRAP.a
+
+除此之外，还需要添加Foundation的库，包括如下：
+
+- QuartzCore.framework
+- OpenGLES.framework
+- Security.framework
+- CFNetwork.framework
+- AudioToolbox.framework
+- AddressBook.framework
+- CoreGraphics.framework
+- AVFoundation.framework
+- CoreMedia.framework
+- CoreVideo.framework
+- SystemConfiguration.framework
+
+### 配置`Build Settings`
+
+#### User-Defined
+
+添加如下自定义的环境变量
+
+```
+DOUBANGO_HOME = ../../doubango
+
+DOUBANGO_INCLUDES = $DOUBANGO_HOME/tinySDP/include $DOUBANGO_HOME/tinySMS/include $DOUBANGO_HOME/tinyHTTP/include $DOUBANGO_HOME/tinySIP/include $DOUBANGO_HOME/tinyRTP/include $DOUBANGO_HOME/tinyMEDIA/include $DOUBANGO_HOME/tinyNET/src $DOUBANGO_HOME/tinyDAV/include $DOUBANGO_HOME/thirdparties/iphone/include $DOUBANGO_HOME/thirdparties/common/include
+
+DOUBANGO_LIBS = $DOUBANGO_HOME/thirdparties/iphone/lib/universal
+
+NGN_STACK_HOME = ..
+
+PREBINDING = NO
+
+ZERO_LINK = NO
+```
+
+#### Linking/Other Linker Flags
+
+下面内容都是在一行里面
+
+```
+-lsrtp
+-lssl
+-lcrypto
+-lyuv
+-lvpx
+-lx264
+-lopenh264
+-lswscale
+-lavutil
+-lavcodec
+-lopus
+-lgsm
+-lg729b
+-lspeex
+-lspeexdsp
+-framework Foundation
+-framework UIKit
+```
+
+#### Search Paths/Header Search Paths
+
+下面内容都是在一行里面
+
+```
+../common-ngn-stack 
+../ios-ngn-stack 
+$DOUBANGO_INCLUDES
+```
+
+#### Search Paths/Library Search Paths
+
+```
+$DOUBANGO_LIBS
+```
+
+#### Apple LLVM 7.1 - Custom Compiler Flags / Other C Flags
+
+下面内容都是在一行里面
+
+```
+-fms-extensions
+-DRECYCLE_STACK=1
+-DDEBUG_LEVEL=DEBUG_LEVEL_INFO
+-DHAVE_SPEEX_DSP=1
+-DHAVE_SPEEX_DENOISE=1
+-DHAVE_LIB_SPEEX=1
+-DHAVE_SPEEX_JB=1
+-DHAVE_LIBOPUS=1
+-DHAVE_LIBGSM=1
+-DHAVE_G729=1
+-DHAVE_COREAUDIO_AUDIO_UNIT=1
+-DHAVE_COREAUDIO_AUDIO_QUEUE=0
+-DHAVE_FFMPEG=1
+-DHAVE_LIBVPX=1
+-DHAVE_OPENH264=1
+-DHAVE_LIBYUV=1
+-DHAVE_SWSSCALE=0
+-DHAVE_OPENSSL=1
+-DHAVE_SRTP=1
+```
+
+#### Apple LLVM 7.1 - Custom Compiler Flags / Other C++ Flags
+
+```
+$(OTHER_CFLAGS)
+```
+
+### 加入头文件
+
+在`ViewController.h`中，加入头文件
+
+```
+#import "iOSNgnStack.h"
+```
+
 
 
 ## 参考文献
