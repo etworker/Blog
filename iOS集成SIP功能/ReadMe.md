@@ -262,6 +262,11 @@ clang: error: linker command failed with exit code 1 (use -v to see invocation)
 - CoreVideo.framework
 - SystemConfiguration.framework
 
+还得加上
+
+- libsqlite3.tbd
+- libresolv.tbd     否则会报dns_free等函数找不到
+
 ### 配置`Build Settings`
 
 #### User-Defined
@@ -361,6 +366,37 @@ $(OTHER_CFLAGS)
 ```
 #import "iOSNgnStack.h"
 ```
+
+编译时报错，说`NgnSipStack.h`中的`SipStack.h`找不到。
+该文件在`\doubango\bindings\_common\`下。
+
+将`$DOUBANGO_HOME/bindings/_common`加入头文件搜索路径后编译，报一堆错，
+说`SipCallback.h`中的`class DialogEvent`等代码中的`class`疑为`Class`。
+
+设置 Build Settings / Apple LLVM 7.1 - Language 下的`Compile Sources As`为`Objective-C++`即可。
+
+然后`SafeObject.h`中的`tsk_mutex.h`又说找不到了，该文件在`doubango\tinySAK\src\`下。
+
+修改`DOUBANGO_INCLUDES`，将`$DOUBANGO_HOME/tinySAK/src`也加入其中。
+
+### 加入实际代码
+
+先是ARC需要将 `[... retain]` 和 `[... release]`这些都去掉。
+
+然后编译报错，说
+
+```
+Undefined symbols for architecture x86_64:
+    "_dns_free", referenced from:
+        _tnet_dns_ctx_dtor in libtinyNET.a
+```
+
+这是因为没有加`libresolv.tbd`。
+
+// 修改`Build Settings / Architectures / Architectures`，将`$(ARCHS_STATNDARD)`改为`armv7 armv7s`。
+// 修改`Build Settings / Architectures / Valid Architectures`，将`arm64 armv7 armv7s`改为`armv7 armv7s`。
+
+接着是Bitcode的错，需要将`Build Settings / Build Options / Enable Bitcode` 设为 `No`。
 
 
 
